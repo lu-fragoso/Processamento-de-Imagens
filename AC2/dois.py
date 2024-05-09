@@ -68,7 +68,7 @@ cv2.putText(
     cv2.FONT_HERSHEY_DUPLEX,
     fontScale=1.8,
     color=(109, 73, 51),
-    thickness=5,
+    thickness=6,
 )
 cv2.putText(
     imageBlank3,
@@ -77,26 +77,30 @@ cv2.putText(
     cv2.FONT_HERSHEY_DUPLEX,
     fontScale=1.4,
     color=(109, 73, 51),
-    thickness=5,
+    thickness=6,
 )
 cv2.putText(
     imageBlank3,
     "RECOMPENSA R$50000",
-    (240, 870),
+    (210, 870),
     cv2.FONT_HERSHEY_DUPLEX,
-    fontScale=1.4,
+    fontScale=1.6,
     color=(109, 73, 51),
-    thickness=5,
+    thickness=6,
 )
 
 image_tripaSeca = cv2.imread("AC2/figs/tripaSeca.png")
 image_tripaSeca_RGB = cv2.cvtColor(image_tripaSeca, cv2.COLOR_BGR2RGB)
 crop_tripaSeca = image_tripaSeca_RGB[46:198, 350:498]
-crop_tripaSeca = cv2.convertScaleAbs(image_tripaSeca_RGB, alpha=1.2, beta=7)
+x, y = 766 - 230, 778 - 292
+# Redimensiona a imagem para ter o mesmo tamanho do quadro da imagem de fundo
+crop_tripaSeca = cv2.resize(crop_tripaSeca, (x, y))
+crop_tripaSeca = cv2.convertScaleAbs(crop_tripaSeca, alpha=1.2, beta=7)
 crop_tripaSeca = cv2.GaussianBlur(crop_tripaSeca, ksize=(5, 5), sigmaX=0.5)
 
-# imageBlank3[292:778,230:766] = crop_tripaSeca[46:198, 350:498]
+imageBlank3[292:778, 230:766] = crop_tripaSeca
 
 
-plt.imshow(crop_tripaSeca)
-plt.show()
+plt.axis('off')
+plt.imshow(imageBlank3)
+plt.savefig("AC2/figs_resultado/ex02_tripaSeca_procurado.png")
