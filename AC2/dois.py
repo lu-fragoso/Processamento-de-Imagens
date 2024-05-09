@@ -19,15 +19,17 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-image_background = cv2.imread("AC2/figs/procurado.jpg")
-background_rgb = cv2.cvtColor(image_background, cv2.COLOR_BGR2RGB)
+image = cv2.imread(
+    "C:/Users/est.pedrogs/Documents/Processamento-de-Imagens/AC2/figs/procurado.jpg"
+)
+background_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 
 def normalize_image(image, crop, threshold, channel, replacement_color):
 
     cropped_img = image[crop[0] : crop[1], crop[2] : crop[3]]
 
-    # verifica se os pixeeis do canal RGB informado é menor que o threshold
+    # verifica se os pixeis do canal RGB informado é menor que o threshold
     mask = cropped_img[:, :, channel] < threshold
     cropped_img[mask] = replacement_color
 
@@ -89,18 +91,36 @@ cv2.putText(
     thickness=6,
 )
 
-image_tripaSeca = cv2.imread("AC2/figs/tripaSeca.png")
+image_background = cv2.GaussianBlur(imageBlank3, ksize=(3, 3), sigmaX=0)
+
+
+image_tripaSeca = cv2.imread(
+    "C:\\Users\\est.pedrogs\\Documents\\Processamento-de-Imagens\\AC2\\figs\\tripaSeca.png"
+)
 image_tripaSeca_RGB = cv2.cvtColor(image_tripaSeca, cv2.COLOR_BGR2RGB)
 crop_tripaSeca = image_tripaSeca_RGB[46:198, 350:498]
 x, y = 766 - 230, 778 - 292
 # Redimensiona a imagem para ter o mesmo tamanho do quadro da imagem de fundo
 crop_tripaSeca = cv2.resize(crop_tripaSeca, (x, y))
 crop_tripaSeca = cv2.convertScaleAbs(crop_tripaSeca, alpha=1.2, beta=7)
-crop_tripaSeca = cv2.GaussianBlur(crop_tripaSeca, ksize=(5, 5), sigmaX=0.5)
-
-imageBlank3[292:778, 230:766] = crop_tripaSeca
+crop_tripaSeca = cv2.GaussianBlur(crop_tripaSeca, ksize=(5, 5), sigmaX=0)
 
 
-plt.axis('off')
-plt.imshow(imageBlank3)
-plt.savefig("AC2/figs_resultado/ex02_tripaSeca_procurado.png")
+R, G, B = cv2.split(crop_tripaSeca)
+
+output_R = cv2.equalizeHist(R)
+output_G = cv2.equalizeHist(G)
+output_B = cv2.equalizeHist(B)
+
+equ = cv2.merge((output_R, output_G, output_B))
+
+
+image_background[292:778, 230:766] = equ
+
+
+plt.axis("off")
+plt.imshow(image_background)
+plt.show()
+# plt.savefig(
+#     "C:/Users/est.pedrogs/Documents/Processamento-de-Imagens/AC2/figs_resultado/ex02_tripaSeca_procurado.png"
+# )
